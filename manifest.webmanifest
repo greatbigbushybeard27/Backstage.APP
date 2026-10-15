@@ -1,0 +1,17 @@
+{
+  "name": "Backstage | Event Operations",
+  "short_name": "Backstage",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#101113",
+  "description": "Event production and hire operations",
+  "icons": [
+    {
+      "src": "./regency-app-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
