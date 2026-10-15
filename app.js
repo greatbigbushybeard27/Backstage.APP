@@ -250,11 +250,11 @@ function requireJobDelete(){if(!canDeleteJobs()){alert('Only Senior Crew or the 
 function requireTaskDelete(){if(!canDeleteJobs()){alert('Only Senior Crew or the Director can delete tasks.');return false}return true}
 function currentUserName(){return currentUser()?.name||'System'}
 function logActivity(entry){data.history.push(Object.assign({},entry,{crewId:currentUser()?.id||null,crew:currentUserName()}))}
-function isLoginRequired(){return !!data.settings?.requireCrewLogin}
+function isLoginRequired(){return false} // Local functionality build: crew login gate disabled
 function sha256Hex(text){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)).then(buf=>Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''))}
 function loggedIn(){return !!currentUser()}
-function requireLogin(){if(isLoginRequired()&&!loggedIn()){showLoginOverlay();return false}return true}
-function showLoginOverlay(){let box=document.getElementById('crewLoginOverlay');if(!box){box=document.createElement('div');box.id='crewLoginOverlay';box.className='login-overlay';document.body.appendChild(box)}const cu=currentUser();const profileBtn=cu?`<button type="button" class="secondary" style="width:100%;margin:8px 0" onclick="event.preventDefault();event.stopPropagation();document.getElementById('crewLoginOverlay')?.remove();setTimeout(()=>openCrewProfile(),0)">👤 Open My Profile</button>`:'';box.innerHTML=`<div class="login-card"><div class="login-brand"><img src="icon.svg" alt="Backstage"></div><h2>Crew</h2>${cu?`<p class="muted" style="text-align:center">Logged in as <b>${esc(cu.name)}</b></p>${profileBtn}<button class="secondary" style="width:100%;margin:8px 0" onclick="crewLogout();document.getElementById('crewLoginOverlay')?.remove()">Log out / Switch Crew</button><hr>`:''}<p class="muted">Choose a crew profile and enter the PIN to switch crew on this phone.</p><button style="width:100%;margin:8px 0" onclick="document.getElementById('crewLoginOverlay')?.remove();cloudAuthModal()">☁️ Log in / create cloud account</button>${crewUsers().filter(u=>u.loginEnabled!==false&&u.pinHash).length?`<hr><label>Local crew login</label><select id="login_user">${crewUsers().filter(u=>u.loginEnabled!==false&&u.pinHash).map(u=>`<option value="${u.id}">${esc(u.name)}</option>`).join('')}</select><input id="login_pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8" placeholder="PIN"><button onclick="doCrewLogin()">Log in with PIN</button><div id="login_msg" class="small"></div>`:'<div class="muted">No local PIN logins are configured.</div>'}</div>`;box.classList.remove('hidden')}
+function requireLogin(){return true} // Local functionality build: no forced login
+function showLoginOverlay(){document.getElementById('crewLoginOverlay')?.remove();return false} // Login overlay disabled in local Backstage build
 
 async function doCrewLogin(){const uid=v('login_user'),pin=v('login_pin');const u=data.users.find(x=>x.id===uid);if(!u||!pin)return;const hash=await sha256Hex(pin);if(hash!==u.pinHash){document.getElementById('login_msg').textContent='Incorrect PIN.';return}localStorage.setItem('regency_current_user',u.id);logActivity({itemName:u.name,action:'Logged in',at:new Date().toISOString()});document.getElementById('crewLoginOverlay')?.remove();render();}
 function crewLogout(){const u=currentUser();if(u)logActivity({itemName:u.name,action:'Logged out',at:new Date().toISOString()});localStorage.removeItem('regency_current_user');render();if(isLoginRequired())showLoginOverlay()}
@@ -1339,4 +1339,4 @@ setTimeout(updateGoogleSyncUI,300);
 
 
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-if(isLoginRequired()&&!loggedIn())setTimeout(showLoginOverlay,0);
+// Forced crew login overlay disabled for local Backstage build.
