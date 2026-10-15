@@ -1,8 +1,17 @@
 {
-  "name": "Backstage | Event Operations",
+  "name": "Backstage",
   "short_name": "Backstage",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#f2f3f5",
-  "theme_color": "#101113"
+  "background_color": "#050806",
+  "theme_color": "#050806",
+  "description": "Backstage live event operations: jobs, crew, equipment, vehicles, safety and event production.",
+  "icons": [
+    {
+      "src": "./backstage-app-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 
-const KEY='backstage_commercial_v1';
+const KEY='avtracker_v1';
 let data;
 function ensureNotifications(){data.notifications=Array.isArray(data.notifications)?data.notifications:[];}
 function notificationKey(key){ensureNotifications();return data.notifications.some(n=>n.key===key);}
@@ -29,9 +29,9 @@ function ensureWageSettings(u){if(!u)return;u.wageSettings=u.wageSettings||{};co
 (data.hours||[]).forEach(h=>{if(!h.rateType)h.rateType='standard';if(h.rateSnapshot==null){const u=(data.users||[]).find(x=>x.id===h.userId);h.rateSnapshot=ensureWageSettings(u)?.[h.rateType==='enhanced1'?'enhanced1Rate':h.rateType==='enhanced2'?'enhanced2Rate':'standardRate']||15;}});
 data.items=data.items||[];data.jobs=data.jobs||[];data.history=data.history||[];data.tasks=Array.isArray(data.tasks)?data.tasks:[];data.users=data.users||[];data.vans=data.vans||[];
 // ===== REGENCY CLOUD SYNC (Supabase) =====
-const SUPABASE_URL='';
-const SUPABASE_PUBLISHABLE_KEY='';
-const REGENCY_ORG_ID='backstage-commercial-local';
+const SUPABASE_URL='https://ocavwsnobededtjtyrxu.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_wRWHfsVX78PdFPMCZqe1TQ_xz27C3W6';
+const REGENCY_ORG_ID='regency-events';
 const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 let cloudSession=null, cloudSyncTimer=null, cloudApplying=false, cloudChannel=null;
 let cloudDirty=false, cloudSyncState='idle', cloudLastError='';
